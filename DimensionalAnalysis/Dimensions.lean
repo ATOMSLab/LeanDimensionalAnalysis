@@ -19,6 +19,17 @@ def luminosity (α) [HasBaseLuminosity α] : dimension α :=
   Pi.single HasBaseLuminosity.luminosity 1
 
 
+
+
+def area (α) [HasBaseLength α] := dimension.length α^2
+def volume (α) [HasBaseLength α] := dimension.length α^3
+@[simp, match_pattern] theorem vol_eq_area_mul_length {α} [HasBaseLength α] : (dimension.area α * (dimension.length α)) = dimension.volume α := by
+  simp[dimension.area, dimension.length, dimension.volume]
+  funext x
+  ring_nf
+instance {α} [HasBaseLength α] : dimension.Eq (area α * length α) (volume α) := ⟨vol_eq_area_mul_length⟩
+
+
 def velocity (α) [HasBaseLength α] [HasBaseTime α] : dimension α := length α / time α
 
 def acceleration (α) [HasBaseLength α] [HasBaseTime α] : dimension α := length α / ((time α) ^ 2)

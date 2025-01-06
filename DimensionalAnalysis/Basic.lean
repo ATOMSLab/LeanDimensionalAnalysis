@@ -56,6 +56,7 @@ attribute [instance] HasBaseTemperature.dec
 attribute [instance] HasBaseLuminosity.dec
 attribute [instance] HasBaseCurrency.dec
 
+
 /-!
 ### Def of dimensions and its properties
 -/
@@ -63,6 +64,8 @@ attribute [instance] HasBaseCurrency.dec
 -- the base dimension is raised to.
 def dimension (α : Type u) := α → ℚ
 
+class dimension.Eq {α} (dim1 dim2 : dimension α) where
+(eq : dim1=dim2)
 namespace dimension
 -- The dimensionless dimension is a dimension where all the exponents are zero. It functions as the identity
 -- element which is why we relate it to One in the instance function.
@@ -108,10 +111,13 @@ instance {α} : Inv (dimension α) := ⟨fun d => dimension.pow d (-1)⟩
 instance {α} : LT (dimension α) := ⟨dimension.lt⟩
 instance {α} : LE (dimension α) := ⟨dimension.le⟩
 
-
 -- Here we define how derivatives and integrals act on dimensions.
 protected def derivative {α} (b : dimension α): dimension α → dimension α := fun a => a / b
 protected def integral {α} (b : dimension α): dimension α → dimension α := fun a => a * b
+
+-- Here we define relative operators (exp, sin, log, etc.)
+protected noncomputable def relativeOperator {α} : dimension α → dimension α :=
+Classical.epsilon $ fun f => ∀ a , a = dimensionless α → f a = dimensionless α
 
 -- Here we prove several helper lemmas which have the simp attribute. These lemmas help
 -- simplify our proofs and allow the simp tactic to use these lemmas.
