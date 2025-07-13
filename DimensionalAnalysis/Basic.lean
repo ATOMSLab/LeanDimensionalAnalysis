@@ -63,9 +63,14 @@ attribute [instance] HasBaseCurrency.dec
 -- Here we define a dimension as a mapping of a base dimension to a rational number which is the exponent
 -- the base dimension is raised to.
 def dimension (α : Type u) := α → ℚ
+variable {α}
 
-class dimension.Eq {α} (dim1 dim2 : dimension α) where
-(eq : dim1=dim2)
+
+class DimEq {α} (dim1 : dimension α) (dim2 : outParam (dimension α)) where
+(Eq : dim1 = dim2)
+
+instance {α} (dim1 : dimension α) (dim2 : outParam (dimension α)) [inst: DimEq dim1 dim2] : dim1 = dim2 := inst.Eq
+
 namespace dimension
 -- The dimensionless dimension is a dimension where all the exponents are zero. It functions as the identity
 -- element which is why we relate it to One in the instance function.
