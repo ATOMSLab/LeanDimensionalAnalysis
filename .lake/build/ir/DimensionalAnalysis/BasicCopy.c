@@ -59,6 +59,7 @@ lean_object* l_NonUnitalNonAssocSemiring_toMulZeroClass___rarg(lean_object*);
 LEAN_EXPORT lean_object* l_dimension_mul(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_pow___at_dimension_instInv___spec__1___rarg(lean_object*, lean_object*, lean_object*, lean_object*);
 static lean_object* l_RingHom_id___at_dimension_dimensionless__numbers__matrix___spec__1___closed__1;
+LEAN_EXPORT lean_object* l_instCoeDimension___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_Matrix_toLin_x27___at_dimension_dimensionless__numbers__matrix___spec__2(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_instLE___boxed(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_LinearEquiv_symm___at_dimension_dimensionless__numbers__matrix___spec__8___rarg(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
@@ -82,6 +83,7 @@ LEAN_EXPORT lean_object* l___private_DimensionalAnalysis_BasicCopy_0__dimension_
 LEAN_EXPORT lean_object* l_LinearEquiv_toAddEquiv___at_dimension_dimensionless__numbers__matrix___spec__11(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_RingHom_id___at_dimension_dimensionless__numbers__matrix___spec__5(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_LinearEquiv_symm___at_dimension_dimensionless__numbers__matrix___spec__8___rarg___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_instCoeDimension(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_Matrix_toLin_x27___at_dimension_dimensionless__numbers__matrix___spec__2___rarg(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_LinearMap_toMatrix_x27___at_dimension_dimensionless__numbers__matrix___spec__4___rarg___lambda__2(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_Pi_single___at_dimension_dimensionless__numbers__matrix___spec__6___rarg___lambda__1___boxed(lean_object*, lean_object*);
@@ -132,8 +134,36 @@ LEAN_EXPORT lean_object* l_RingHom_id___at_dimension_dimensionless__numbers__mat
 LEAN_EXPORT lean_object* l_dimension_instCommGroup___rarg___lambda__3(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_instCommGroup___rarg___lambda__2(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_Pi_single___at_dimension_dimensionless__numbers__matrix___spec__6___rarg___lambda__1(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_instCoeDimension___rarg(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_instCommGroup(lean_object*, lean_object*);
 lean_object* l_Ring_toAddCommGroup___rarg(lean_object*);
+LEAN_EXPORT lean_object* l_instCoeDimension___rarg(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
+_start:
+{
+lean_object* x_4; lean_object* x_5; 
+x_4 = lean_apply_1(x_2, x_3);
+x_5 = lean_apply_1(x_1, x_4);
+return x_5;
+}
+}
+LEAN_EXPORT lean_object* l_instCoeDimension(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4, lean_object* x_5) {
+_start:
+{
+lean_object* x_6; 
+x_6 = lean_alloc_closure((void*)(l_instCoeDimension___rarg), 3, 0);
+return x_6;
+}
+}
+LEAN_EXPORT lean_object* l_instCoeDimension___boxed(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4, lean_object* x_5) {
+_start:
+{
+lean_object* x_6; 
+x_6 = l_instCoeDimension(x_1, x_2, x_3, x_4, x_5);
+lean_dec(x_5);
+lean_dec(x_4);
+return x_6;
+}
+}
 LEAN_EXPORT lean_object* l_dimension_dimensionless___rarg(lean_object* x_1, lean_object* x_2) {
 _start:
 {

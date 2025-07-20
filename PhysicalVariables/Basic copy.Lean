@@ -2,47 +2,69 @@ import DimensionalAnalysis.Dimensions
 
 -- Defining physical variables and measurements
 namespace PhysicalVariable
-structure measurement (V α γ) [CommRing γ]  where
-(value : V)
+structure measurement (α γ) [CommRing γ]  where
+(value : γ)
 (dim : dimension α γ)
 
 
-variable {V1 V2 V3} {α} {γ} [CommRing γ]
+variable {α} {γ} [CommRing γ]
 
 -- Multiplication
-def measurement.Mul [HMul V1 V2 V3] :
-measurement V1 α γ →  measurement V2 α γ → measurement V3 α γ
+def measurement.Mul :
+measurement α γ →  measurement α γ → measurement α γ
 | a,b => measurement.mk (a.value*b.value) (a.dim*b.dim)
 
-instance [HMul V1 V2 V3] :
-  HMul (measurement V1 α γ) (measurement V2 α γ) (measurement V3 α γ) := ⟨measurement.Mul⟩
+instance : Mul (measurement α γ) := ⟨measurement.Mul⟩
 
 -- Division
-def measurement.Div [HDiv V1 V2 V3] :
-measurement V1 α γ →  measurement V2 α γ → measurement V3 α γ
+def measurement.Div [Div γ]:
+measurement α γ →  measurement α γ → measurement α γ
 | a,b => measurement.mk (a.value/b.value) (a.dim/b.dim)
 
-instance [HDiv V1 V2 V3] :
-  HDiv (measurement V1 α γ) (measurement V2 α γ) (measurement V3 α γ) := ⟨measurement.Div⟩
+instance [Div γ]: Div (measurement α γ) := ⟨measurement.Div⟩
 
 
 -- Addition
-noncomputable def measurement.Add [HAdd V1 V2 V3]: measurement V1 α γ → measurement V2 α γ → measurement V3 α γ
+noncomputable def measurement.Add : measurement α γ → measurement α γ → measurement α γ
 | a,b => ⟨a.value+b.value,a.dim+b.dim⟩
 
-noncomputable instance [HAdd V1 V2 V3] : HAdd (measurement V1 α γ) (measurement V2 α γ) (measurement V3 α γ ) := ⟨measurement.Add⟩
+noncomputable instance : Add (measurement α γ) := ⟨measurement.Add⟩
 
 -- Subtraction
-noncomputable def measurement.Sub [HSub V1 V2 V3]: measurement V1 α γ → measurement V2 α γ → measurement V3 α γ
+noncomputable def measurement.Sub : measurement α γ → measurement α γ → measurement α γ
 | a,b => ⟨a.value-b.value,a.dim-b.dim⟩
 
-noncomputable instance [HSub V1 V2 V3] : HSub (measurement V1 α γ) (measurement V2 α γ) (measurement V3 α γ ) := ⟨measurement.Sub⟩
+noncomputable instance : Sub (measurement α γ) := ⟨measurement.Sub⟩
 
-def measurement.Pow {V1 V2 α γ β}  [CommRing γ] [CommRing V1] [CommRing V2]
-[HPow V1 β V2] [HPow (dimension α γ) β (dimension α γ)]:
-(measurement V1 α γ ) → β → (measurement V2 α γ )
+-- Powers
+def measurement.Pow [Pow γ γ]:
+(measurement α γ ) → γ → (measurement α γ )
 | a,b => ⟨a.value^b,a.dim^b⟩
 
-instance {V1 V2 α γ β} [CommRing γ] [CommRing V1] [CommRing V2]
-[HPow V1 β V2] [HPow (dimension α γ) β (dimension α γ)] :
-HPow (measurement V1 α γ) β (measurement V2 α γ) := ⟨measurement.Pow⟩
+instance [Pow γ γ]: Pow (measurement α γ) γ := ⟨measurement.Pow⟩
+
+def ofDimensionlessValue (val : γ) : measurement α γ := measurement.mk val (dimension.dimensionless α γ)
+
+instance : OfNat (measurement α γ) n where
+  ofNat := {
+    value := n,
+    dim   := dimension.dimensionless α γ
+  }
+
+
+end PhysicalVariable
+
+namespace Units
+instance : Coe ℤ ℚ := sorry
+
+variable {α}
+def meter [HasBaseLength α] : PhysicalVariable.measurement α ℚ := ⟨1,dimension.length α⟩
+
+def centimeter [HasBaseLength α] : PhysicalVariable.measurement α ℚ :=
+  meter/100
+
+def inch [HasBaseLength α] : PhysicalVariable.measurement α ℚ := centimeter/(254/100)
+
+def casesium133GroundStateHyperfineOscillationDuration [HasBaseTime α] : PhysicalVariable.measurement α ℚ := ⟨1, dimension.time α⟩
+
+def second [HasBaseTime α] : PhysicalVariable.measurement α ℚ := 9192631770*casesium133GroundStateHyperfineOscillationDuration

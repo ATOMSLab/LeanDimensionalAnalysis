@@ -1,8 +1,5 @@
 {"log":
  [{"message":
    ".> LEAN_PATH=.\\.\\.lake/packages\\Cli\\.lake\\build\\lib;.\\.\\.lake/packages\\batteries\\.lake\\build\\lib;.\\.\\.lake/packages\\Qq\\.lake\\build\\lib;.\\.\\.lake/packages\\aesop\\.lake\\build\\lib;.\\.\\.lake/packages\\proofwidgets\\.lake\\build\\lib;.\\.\\.lake/packages\\importGraph\\.lake\\build\\lib;.\\.\\.lake/packages\\LeanSearchClient\\.lake\\build\\lib;.\\.\\.lake/packages\\plausible\\.lake\\build\\lib;.\\.\\.lake/packages\\mathlib\\.lake\\build\\lib;.\\.\\.lake\\build\\lib PATH c:\\Users\\Max Bobbin\\.elan\\toolchains\\leanprover--lean4---v4.15.0-rc1\\bin\\lean.exe -Dpp.unicode.fun=true -DautoImplicit=false .\\.\\.\\.\\DimensionalAnalysis\\BasicCopy.lean -R .\\.\\.\\. -o .\\.\\.lake\\build\\lib\\DimensionalAnalysis\\BasicCopy.olean -i .\\.\\.lake\\build\\lib\\DimensionalAnalysis\\BasicCopy.ilean -c .\\.\\.lake\\build\\ir\\DimensionalAnalysis\\BasicCopy.c --json",
-   "level": "trace"},
-  {"message":
-   ".\\.\\.\\.\\DimensionalAnalysis\\BasicCopy.lean:66:0: dimension.{u} (α γ : Type u) [CommRing γ] : Type u",
-   "level": "info"}],
- "depHash": "2187360240127355441"}
+   "level": "trace"}],
+ "depHash": "5927134809262868833"}

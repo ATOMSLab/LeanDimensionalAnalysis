@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import Mathlib.Data.Matrix.Notation
 import Mathlib.Data.Matrix.Rank
 
-universe u
+universe u v
 
 /-!
 ### Dimension type classes
@@ -13,36 +13,36 @@ universe u
 -- Here are the seven base dimensions that would be used by ISO:
 class HasBaseTime (α : Type u) where
   [dec : DecidableEq α]
-  time : α
+  Time : α
 
 class HasBaseLength (α : Type u) where
   [dec : DecidableEq α]
-  length : α
+  Length : α
 
 class HasBaseMass (α : Type u) where
   [dec : DecidableEq α]
-  mass : α
+  Mass : α
 
 class HasBaseAmount (α : Type u) where
   [dec : DecidableEq α]
-  amount : α
+  Amount : α
 
 class HasBaseCurrent (α : Type u) where
   [dec : DecidableEq α]
-  current : α
+  Current : α
 
 class HasBaseTemperature (α : Type u) where
   [dec : DecidableEq α]
-  temperature : α
+  Temperature : α
 
 class HasBaseLuminosity (α : Type u) where
   [dec : DecidableEq α]
-  luminosity : α
+  Luminosity : α
 
 -- Here is a base dimension for currency
 class HasBaseCurrency (α : Type u) where
   [dec : DecidableEq α]
-  currency : α
+  Currency : α
 
 -- This declares decidability as an atribute of each base dimension. Its basically
 -- a tag for lean named "instance" and this will automatically confirm decidability
@@ -60,196 +60,195 @@ attribute [instance] HasBaseCurrency.dec
 /-!
 ### Def of dimensions and its properties
 -/
--- Here we define a dimension as a mapping of a base dimension to a rational number which is the exponent
+-- Here we define a dimension as a mapping of a base dimension to a number which is the exponent
 -- the base dimension is raised to.
-def dimension (α : Type u) := α → ℚ
-variable {α}
+def dimension (α : Type u) (γ : Type v) [CommRing γ] := α → γ
 
-
-class DimEq {α} (dim1 : dimension α) (dim2 : outParam (dimension α)) where
+class DimEq {α γ} [CommRing γ] (dim1 : dimension α γ) (dim2 : semiOutParam (dimension α γ)) where
 (Eq : dim1 = dim2)
 
-instance {α} (dim1 : dimension α) (dim2 : outParam (dimension α)) [inst: DimEq dim1 dim2] : dim1 = dim2 := inst.Eq
+instance {α γ1 γ2} [CommRing γ1] [CommRing γ2] [Coe γ1 γ2] : Coe (dimension α γ1) (dimension α γ2) where
+coe :=  fun f => fun x => (f x : γ2)
 
 namespace dimension
+
 -- The dimensionless dimension is a dimension where all the exponents are zero. It functions as the identity
 -- element which is why we relate it to One in the instance function.
-def dimensionless (α) : dimension α := Function.const α 0
-instance {α} : One (dimension α) := ⟨dimension.dimensionless α⟩
-instance {α} : Nonempty (dimension α) := One.instNonempty
-noncomputable instance (α : Type u) (a b : dimension α ) : Decidable (a = b) :=
+def dimensionless (α : Type u) (γ : Type v) [CommRing γ] : dimension α γ := Function.const α 0
+instance (α : Type u) (γ : Type v)[CommRing γ] : One (dimension α γ) := ⟨dimension.dimensionless α γ⟩
+instance (α : Type u) (γ : Type v) [CommRing γ] : Nonempty (dimension α γ) := One.instNonempty
+noncomputable instance (α : Type u) (γ : Type v) [CommRing γ] (a b : dimension α γ ) : Decidable (a = b) :=
   Classical.propDecidable (a = b)
 
 -- Here we define the algebraic operators (+,-,*,/,^,<) and how they can act on dimensions.
 
 -- Addition and subtraction only work if both dimensions are the same and returns the same dimension
-protected noncomputable def add {α}: dimension α → dimension α → dimension α :=
+variable {α : Type u} {γ : Type v} [CommRing γ]
+
+protected noncomputable def add : dimension α γ → dimension α γ → dimension α γ :=
 Classical.epsilon $ fun f => ∀ a b, a = b → f a b = a
-protected noncomputable def sub {α}: dimension α → dimension α → dimension α :=
+protected noncomputable def sub : dimension α γ → dimension α γ → dimension α γ :=
 Classical.epsilon $ fun f => ∀ a b, a = b → f a b = a
 
 -- For multiplication, all the exponents are added together. For divison, they are subtracted.
-protected def mul {α} : dimension α → dimension α → dimension α
+protected def mul  : dimension α γ → dimension α γ → dimension α γ
 | a, b => fun i => a i + b i
-protected def div {α} : dimension α → dimension α → dimension α
+protected def div  : dimension α γ → dimension α γ → dimension α γ
 | a, b => fun i => a i - b i
 
 -- Raising a dimension to a power results in multiplying each exponent by the power.
-protected def pow {α} : dimension α → ℚ → dimension α
+
+protected def pow {γ} [CommRing γ]: dimension α γ → γ → dimension α γ
 | a, n => fun i => n * (a i)
 
 -- Inequality operators only work if the dimensions are the same.
-protected def le {α} : dimension α → dimension α → Prop
+protected def le  : dimension α γ → dimension α γ → Prop
 | a, b => ite (a = b) true false
-protected def lt {α} : dimension α → dimension α → Prop
+protected def lt  : dimension α γ → dimension α γ → Prop
 | a, b => ite (a = b) true false
 
 -- Here we unify our operator definitions with their respective global class.
-noncomputable instance {α} : Add (dimension α) := ⟨dimension.add⟩
-noncomputable instance {α} : Sub (dimension α) := ⟨dimension.sub⟩
-instance {α} : Mul (dimension α) := ⟨dimension.mul⟩
-instance {α} : Div (dimension α) := ⟨dimension.div⟩
-instance {α} : Pow (dimension α) ℕ := ⟨fun d n => dimension.pow d n⟩
-instance {α} : Pow (dimension α) ℤ := ⟨fun d z => dimension.pow d z⟩
-instance {α} : Pow (dimension α) ℚ := ⟨dimension.pow⟩
-instance {α} : Inv (dimension α) := ⟨fun d => dimension.pow d (-1)⟩
-instance {α} : LT (dimension α) := ⟨dimension.lt⟩
-instance {α} : LE (dimension α) := ⟨dimension.le⟩
+noncomputable instance  : Add (dimension α γ) := ⟨dimension.add⟩
+noncomputable instance  : Sub (dimension α γ) := ⟨dimension.sub⟩
+instance  : Mul (dimension α γ) := ⟨dimension.mul⟩
+instance  : Div (dimension α γ) := ⟨dimension.div⟩
+instance  {γ} [CommRing γ] : HPow (dimension α γ) γ (dimension α γ) := ⟨dimension.pow⟩
+instance : Pow (dimension α γ) γ := ⟨dimension.pow⟩
+instance  : Inv (dimension α γ) := ⟨fun d => d^(-1:γ)⟩
+instance  : LT (dimension α γ) := ⟨dimension.lt⟩
+instance  : LE (dimension α γ) := ⟨dimension.le⟩
+
+instance {γ1 γ2} [CommRing γ1] [CommRing γ2] [Coe γ1 γ2]: HPow (dimension α γ1) γ2 (dimension α γ2) where
+  hPow
+  | a, n => dimension.pow (a : (dimension α γ2)) n
 
 -- Here we define how derivatives and integrals act on dimensions.
-protected def derivative {α} (b : dimension α): dimension α → dimension α := fun a => a / b
-protected def integral {α} (b : dimension α): dimension α → dimension α := fun a => a * b
+protected def derivative  (b : dimension α γ): dimension α γ → dimension α γ := fun a => a / b
+protected def integral  (b : dimension α γ): dimension α γ → dimension α γ := fun a => a * b
 
 -- Here we define relative operators (exp, sin, log, etc.)
-protected noncomputable def relativeOperator {α} : dimension α → dimension α :=
-Classical.epsilon $ fun f => ∀ a , a = dimensionless α → f a = dimensionless α
+protected noncomputable def relativeOperator  : dimension α γ → dimension α γ :=
+Classical.epsilon $ fun Operator => ∀ dim , dim = 1 → Operator dim = 1
 
 -- Here we prove several helper lemmas which have the simp attribute. These lemmas help
 -- simplify our proofs and allow the simp tactic to use these lemmas.
-@[simp] lemma add_def {α} (a b : dimension α) : a.add b = a + b := by rfl
-@[simp] lemma add_def' {α} (a : dimension α) : a.add a = a := by
+@[simp] lemma add_def  (a b : dimension α γ) : a.add b = a + b := by rfl
+@[simp] lemma add_def'  (a : dimension α γ) : a.add a = a := by
   generalize hb : a = b
   nth_rewrite 1 [(symm hb)]
   revert a b hb
   unfold dimension.add
   convert Classical.epsilon_spec ((⟨fun a _ => a, fun _ _ _ => rfl⟩ :
-    ∃ (f : dimension α → dimension α → dimension α), ∀ a b, a = b → f a b = a))
-  have h : ∀ (a b : dimension α), a = b → b = a := by
+    ∃ (f : dimension α γ → dimension α γ → dimension α γ), ∀ a b, a = b → f a b = a))
+  have h : ∀ (a b : dimension α γ), a = b → b = a := by
     intros a b h
     exact symm h
   apply h _ _
   trivial
 
-@[simp] lemma add_def'' {α} (a : dimension α) : a + a = a := by rw [← add_def, add_def']
-@[simp] lemma sub_def {α} (a b : dimension α) : a.sub b = a - b := by rfl
-@[simp] lemma sub_def' {α} (a : dimension α) : a.sub a = a := by
+@[simp] lemma add_def''  (a : dimension α γ) : a + a = a := by rw [← add_def, add_def']
+@[simp] lemma sub_def  (a b : dimension α γ) : a.sub b = a - b := by rfl
+@[simp] lemma sub_def'  (a : dimension α γ) : a.sub a = a := by
   generalize hb : a = b
   nth_rewrite 1 [(symm hb)]
   revert a b hb
   unfold dimension.sub
   convert Classical.epsilon_spec ((⟨fun a _ => a, fun _ _ _ => rfl⟩ :
-    ∃ (f : dimension α → dimension α → dimension α), ∀ a b, a = b → f a b = a))
-  have h : ∀ (a b : dimension α), a = b → b = a := by
+    ∃ (f : dimension α γ → dimension α γ → dimension α γ), ∀ a b, a = b → f a b = a))
+  have h : ∀ (a b : dimension α γ), a = b → b = a := by
     intros a b h
     exact symm h
   apply h _ _
   trivial
 
-@[simp] lemma sub_def'' {α} (a : dimension α)  : a - a = a := by rw [← sub_def, sub_def']
-@[simp] lemma mul_def {α} (a b : dimension α) : a.mul b = a * b := by rfl
-@[simp] lemma mul_def' {α} (a b : dimension α) : a * b = fun i => a i + b i := by rfl
-@[simp] lemma div_def {α} (a b : dimension α) : a.div b = a / b := by rfl
-@[simp] lemma div_def' {α} (a b : dimension α) : a / b = fun i => a i - b i := by rfl
-@[simp] lemma pow_def {α} (a : dimension α) (b : ℚ) : a.pow b = a^b := by rfl
-@[simp] lemma pow_def' {α} (a : dimension α) (b : ℚ) : a ^ b = fun i => b * (a i):= by rfl
-@[simp] lemma npow_def {α} (a : dimension α) (b : ℕ) : a.pow b = a^b := by rfl
-@[simp] lemma npow_def' {α} (a : dimension α) (b : ℕ) : a ^ b = fun i => b * (a i):= by rfl
-@[simp] lemma zpow_def {α} (a : dimension α) (b : ℤ) : a.pow b = a^b := by rfl
-@[simp] lemma zpow_def' {α} (a : dimension α) (b : ℤ) : a ^ b = fun i => b * (a i):= by rfl
-@[simp] lemma inv_def {α} (a : dimension α) : a⁻¹ = fun i => (-1 : ℤ) * (a i) := by rfl
-@[simp] lemma le_def {α} (a b : dimension α) : a.le b ↔ a ≤ b := by rfl
-@[simp] lemma le_def' {α} (a : dimension α) : a ≤ a := by
+@[simp] lemma sub_def''  (a : dimension α γ)  : a - a = a := by rw [← sub_def, sub_def']
+@[simp] lemma mul_def  (a b : dimension α γ) : a.mul b = a * b := by rfl
+@[simp] lemma mul_def'  (a b : dimension α γ) : a * b = fun i => a i + b i := by rfl
+@[simp] lemma div_def  (a b : dimension α γ) : a.div b = a / b := by rfl
+@[simp] lemma div_def'  (a b : dimension α γ) : a / b = fun i => a i - b i := by rfl
+@[simp] lemma pow_def  (a : dimension α γ) (b : γ) : a.pow b = a^b := by rfl
+@[simp] lemma pow_def'   (a : dimension α γ) (b : γ) : a ^ b = fun i => b * (a i):= by rfl
+@[simp] lemma inv_def  (a : dimension α γ) : a⁻¹ = a^(-1:γ):= by rfl
+@[simp] lemma le_def  (a b : dimension α γ) : a.le b ↔ a ≤ b := by rfl
+@[simp] lemma le_def'  (a : dimension α γ) : a ≤ a := by
   rw [← le_def]
   simp only [dimension.le, reduceIte]
-@[simp] lemma lt_def {α} (a b : dimension α) : a.lt b ↔ a < b := by rfl
-@[simp] lemma lt_def' {α} (a : dimension α) : a < a := by
+@[simp] lemma lt_def  (a b : dimension α γ) : a.lt b ↔ a < b := by rfl
+@[simp] lemma lt_def'  (a : dimension α γ) : a < a := by
   rw [← dimension.lt_def]
   simp only [dimension.lt, reduceIte]
 
 
 @[simp]
-lemma one_eq_dimensionless {α} : 1 = dimensionless α := by rfl
+lemma one_eq_dimensionless  : 1 = dimensionless α γ := by rfl
 
 @[simp]
-lemma dimensionless_def' {α} : dimensionless α = Function.const α 0 := rfl
+lemma dimensionless_def'  : dimensionless α γ = Function.const α 0 := rfl
 
-protected theorem mul_comm {α} (a b : dimension α) : a * b = b * a := by
+protected theorem mul_comm  (a b : dimension α γ) : a * b = b * a := by
   simp only [mul_def']
   funext
   rw [add_comm]
 
-protected theorem div_mul_comm {α} (a b c : dimension α) : a / c * b  = b / c * a := by
+protected theorem div_mul_comm  (a b c : dimension α γ) : a / c * b  = b / c * a := by
   simp only [div_def', mul_def']
   funext
   rw [sub_add_comm]
 
-protected theorem mul_assoc {α} (a b c : dimension α) : a * b * c = a * (b * c) := by
+protected theorem mul_assoc  (a b c : dimension α γ) : a * b * c = a * (b * c) := by
   simp only [mul_def']
   funext
   rw [add_assoc]
 
-protected theorem mul_one {α} (a : dimension α) : a * 1 = a := by simp only [one_eq_dimensionless,
-  dimensionless_def', Function.const_zero, mul_def', Pi.zero_apply, add_zero]
+protected theorem mul_one  (a : dimension α γ) : a * 1 = a := by
+simp only [one_eq_dimensionless, dimensionless_def', Function.const_zero, mul_def', Pi.zero_apply, add_zero]
 
-protected theorem one_mul {α} (a : dimension α) : 1 * a = a := by simp only [one_eq_dimensionless,
+protected theorem one_mul  (a : dimension α γ) : 1 * a = a := by simp only [one_eq_dimensionless,
   dimensionless_def', Function.const_zero, mul_def', Pi.zero_apply, zero_add]
 
-protected theorem div_eq_mul_inv {α} (a b : dimension α) : a / b = a * b⁻¹ := by
-  simp only [div_def', inv_def, Int.reduceNeg, Int.cast_neg, Int.cast_one, neg_mul, one_mul,
-    mul_def']
+protected theorem div_eq_mul_inv  (a b : dimension α γ) : a / b = a * b⁻¹ := by
+  simp
   funext
   rw [sub_eq_add_neg]
 
-protected theorem mul_left_inv {α} (a : dimension α) : a⁻¹ * a = 1 := by
-  simp only [inv_def, Int.reduceNeg, Int.cast_neg, Int.cast_one, neg_mul, one_mul, mul_def',
-    neg_add_cancel, one_eq_dimensionless, dimensionless_def', Function.const_zero]
-  rfl
+protected theorem mul_left_inv  (a : dimension α γ) : a⁻¹ * a = 1 := by
+  simp
+  funext
+  simp
 
-protected theorem mul_right_inv {α} (a : dimension α) : a * a⁻¹ = 1 := by
+protected theorem mul_right_inv  (a : dimension α γ) : a * a⁻¹ = 1 := by
   rw [dimension.mul_comm, dimension.mul_left_inv]
 
-protected theorem pow_zero {α} (a : dimension α) : a ^ 0 = 1 := by
-  simp only [npow_def', CharP.cast_eq_zero, zero_mul, one_eq_dimensionless, dimensionless_def',
-    Function.const_zero]
-  rfl
-
-protected theorem pow_succ {α} (a : dimension α) (n : ℕ) : a ^ (n + 1) = a * a^n := by
-  simp only [npow_def', Nat.cast_add, Nat.cast_one, mul_def']
+protected theorem pow_zero  (a : dimension α γ) : a ^ (0:γ) = 1 := by
+  simp
   funext
-  rw [Rat.add_mul, add_comm, one_mul]
+  simp
 
-instance {α} : CommGroup (dimension α) where
+protected theorem pow_succ  (a : dimension α γ) (n : γ) : a ^ (n + 1) = a * a^n := by
+  simp
+  funext x
+  rw [add_mul,add_comm, one_mul]
+
+instance  : CommGroup (dimension α γ) where
   mul := dimension.mul
   div := dimension.div
   inv a := dimension.pow a (-1)
   mul_assoc := dimension.mul_assoc
-  one := dimensionless α
-  npow n a:= dimension.pow a n
-  zpow z a:= dimension.pow a z
+  one := dimensionless α γ
+  npow n a := dimension.pow a ↑n
+  zpow z a:= dimension.pow a ↑z
   one_mul := dimension.one_mul
   mul_one := dimension.mul_one
   mul_comm := dimension.mul_comm
   div_eq_mul_inv a := dimension.div_eq_mul_inv a
   inv_mul_cancel a := dimension.mul_left_inv a
-  npow_zero := dimension.pow_zero
+  npow_zero := by intro x; funext x; simp
   npow_succ n a := by simp; funext x; rw [add_one_mul]
-  zpow_neg' _ _ := by simp; rename_i x1 x2; funext x3; ring
+  zpow_neg' _ _ := by simp; rename_i x1 x2; funext x3; rw [← neg_add,neg_mul,add_comm]
   zpow_succ' _ _ := by simp; rename_i x1 x2; funext; rw [add_one_mul]
-  zpow_zero' := dimension.pow_zero
+  zpow_zero' := by intro x; funext x; simp
 
-/-!
-### Other dimensions
--/
+
 
 
 
@@ -261,17 +260,17 @@ instance {α} : CommGroup (dimension α) where
 -/
 
 --Converts a list (tuple) of dimensions (the variables) into a matrix of exponent values
-def dimensional_matrix {n : ℕ} {α} [Fintype α] (d : Fin n → dimension α)
-  (perm : Fin (Fintype.card α) → α) : Matrix (Fin (Fintype.card α)) (Fin n) ℚ :=
+def dimensional_matrix {n : ℕ}  [Fintype α] (d : Fin n → dimension α γ)
+  (perm : Fin (Fintype.card α) → α) : Matrix (Fin (Fintype.card α)) (Fin n) γ :=
     Matrix.of.toFun (fun (a : Fin (Fintype.card α)) (i : Fin n) => d i (perm a))
 
 --Calculates the number of dimensionless parameters possible from a list of dimensions
-noncomputable def number_of_dimensionless_parameters {n : ℕ} {α} [Fintype α]
-  (d : Fin n → dimension α) (perm : Fin (Fintype.card α) → α) :=
+noncomputable def number_of_dimensionless_parameters {n : ℕ}  [Fintype α]
+  (d : Fin n → dimension α γ) (perm : Fin (Fintype.card α) → α) :=
     n - Matrix.rank (dimensional_matrix d perm)
 
 --Calculates the dimensionless parameters from a list of dimensions (not unique)
-def dimensionless_numbers_matrix {n : ℕ} {α} [Fintype α] (d : Fin n → dimension α)
+def dimensionless_numbers_matrix {n : ℕ}  [Fintype α] (d : Fin n → dimension α γ)
   (perm : Fin (Fintype.card α) → α) :=
     LinearMap.ker (Matrix.toLin' (dimensional_matrix d perm))
 end dimension

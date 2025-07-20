@@ -2,4 +2,4 @@
  [{"message":
    ".> LEAN_PATH=.\\.\\.lake/packages\\Cli\\.lake\\build\\lib;.\\.\\.lake/packages\\batteries\\.lake\\build\\lib;.\\.\\.lake/packages\\Qq\\.lake\\build\\lib;.\\.\\.lake/packages\\aesop\\.lake\\build\\lib;.\\.\\.lake/packages\\proofwidgets\\.lake\\build\\lib;.\\.\\.lake/packages\\importGraph\\.lake\\build\\lib;.\\.\\.lake/packages\\LeanSearchClient\\.lake\\build\\lib;.\\.\\.lake/packages\\plausible\\.lake\\build\\lib;.\\.\\.lake/packages\\mathlib\\.lake\\build\\lib;.\\.\\.lake\\build\\lib PATH c:\\Users\\Max Bobbin\\.elan\\toolchains\\leanprover--lean4---v4.15.0-rc1\\bin\\lean.exe -Dpp.unicode.fun=true -DautoImplicit=false .\\.\\.\\.\\DimensionalAnalysis\\Dimensions.lean -R .\\.\\.\\. -o .\\.\\.lake\\build\\lib\\DimensionalAnalysis\\Dimensions.olean -i .\\.\\.lake\\build\\lib\\DimensionalAnalysis\\Dimensions.ilean -c .\\.\\.lake\\build\\ir\\DimensionalAnalysis\\Dimensions.c --json",
    "level": "trace"}],
- "depHash": "9672000341656047643"}
+ "depHash": "15751166728743844901"}
