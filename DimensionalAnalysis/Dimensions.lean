@@ -6,7 +6,7 @@ universe u v
 ### Definition of the foundational dimensions
 -/
 namespace dimension
-variable (α : Type u)
+variable (α : Type u) [HasBaseLength α] [HasBaseTime α] [HasBaseMass α]
 -- the foundational dimensions are defined on the basis of the integers. This doesn't limit they use
 -- because we can coerce the exponent type to another type for a dimension. Therefore, as long as
 -- the exponents coerce we can raise this to any power and get a dimension with the proper type.
@@ -22,21 +22,28 @@ def luminosity [HasBaseLuminosity α] : dimension α ℤ := Pi.single HasBaseLum
 /-!
 ### Spatial Dimensions
 -/
-
-abbrev n_volume (α : Type u) {γ : Type v} [CommRing γ] [Coe ℤ γ] (n : γ) [HasBaseLength α] := (length α)^n
-abbrev area (α : Type u) {γ : Type v} [CommRing γ] [Coe ℤ γ] [HasBaseLength α] := n_volume α (2:γ)
-abbrev volume (α : Type u) {γ : Type v} [CommRing γ] [Coe ℤ γ] [HasBaseLength α] := n_volume α (3:γ)
-
+abbrev area := (length α)^2
+abbrev volume := (length α)^3
 
 /-!
 ### Temporal Dimensions
 -/
-abbrev velocity (α) [HasBaseLength α] [HasBaseTime α] := length α/ time α
-abbrev acceleration (α) [HasBaseLength α] [HasBaseTime α] := length α / ((time α) ^ 2)
+abbrev velocity := length α/ time α
+abbrev acceleration := length α / ((time α) ^ 2)
+
+/-!
+### Volumetric Variables
+-/
+abbrev mass_density := mass α / volume α
 
 /-!
 ### Kinematic Dimensions
 -/
-abbrev force (α) [HasBaseLength α] [HasBaseTime α] [HasBaseMass α] := length α / ((time α) ^ 2) * mass α
+abbrev force := length α / ((time α) ^ 2) * mass α
+abbrev dynamic_viscocity := mass α / (length α * time α)
 
+/-!
+### Dimensionless numbers
+-/
+abbrev reynolds_number := mass_density α * velocity α *length α /dynamic_viscocity α
 end dimension
