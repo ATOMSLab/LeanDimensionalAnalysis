@@ -2,7 +2,7 @@ import DimensionalAnalysis.Dimensions
 
 variable {α} [HasBaseLength α] [HasBaseTime α] [HasBaseMass α]
 open dimension
-theorem accel_eq_del_div_time : acceleration α = velocity α / time α := by
+theorem accel_eq_vel_div_time : acceleration α = velocity α / time α := by
   rw[acceleration,velocity,pow_two,div_div]
 
 theorem reynolds_eq_dimless : reynolds_number α = dimensionless α ℤ := by

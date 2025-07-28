@@ -56,21 +56,21 @@ instance ISO.DecidableEq : DecidableEq ISO
   | ISO.mass, ISO.luminosity => isFalse (fun h => ISO.noConfusion h)
   | ISO.mass, ISO.mass => isTrue rfl
 
-instance : HasBaseTime ISO := {dec := ISO.DecidableEq, time := ISO.time}
-instance : HasBaseLength ISO := {dec := ISO.DecidableEq, length := ISO.length}
-instance : HasBaseCurrent ISO := {dec := ISO.DecidableEq, current := ISO.current}
-instance : HasBaseTemperature ISO := {dec := ISO.DecidableEq, temperature := ISO.temperature}
-instance : HasBaseAmount ISO := {dec := ISO.DecidableEq, amount := ISO.amount}
-instance : HasBaseLuminosity ISO := {dec := ISO.DecidableEq, luminosity := ISO.luminosity}
-instance : HasBaseMass ISO := {dec := ISO.DecidableEq, mass := ISO.mass}
+instance : HasBaseTime ISO := {dec := ISO.DecidableEq, Time := ISO.time}
+instance : HasBaseLength ISO := {dec := ISO.DecidableEq, Length := ISO.length}
+instance : HasBaseCurrent ISO := {dec := ISO.DecidableEq, Current := ISO.current}
+instance : HasBaseTemperature ISO := {dec := ISO.DecidableEq, Temperature := ISO.temperature}
+instance : HasBaseAmount ISO := {dec := ISO.DecidableEq, Amount := ISO.amount}
+instance : HasBaseLuminosity ISO := {dec := ISO.DecidableEq, Luminosity := ISO.luminosity}
+instance : HasBaseMass ISO := {dec := ISO.DecidableEq, Mass := ISO.mass}
 
-lemma ISO_length_to_has_length : ISO.length = HasBaseLength.length := by rfl
-lemma ISO_time_to_has_time : ISO.time = HasBaseTime.time := by rfl
-lemma ISO_current_to_has_current : ISO.current = HasBaseCurrent.current := by rfl
-lemma ISO_temperature_to_has_temperature : ISO.temperature = HasBaseTemperature.temperature := by rfl
-lemma ISO_amount_to_has_amount : ISO.amount = HasBaseAmount.amount := by rfl
-lemma ISO_luminosity_to_has_luminosity : ISO.luminosity = HasBaseLuminosity.luminosity := by rfl
-lemma ISO_mass_to_has_mass : ISO.mass = HasBaseMass.mass := by rfl
+lemma ISO_length_to_has_length : ISO.length = HasBaseLength.Length := by rfl
+lemma ISO_time_to_has_time : ISO.time = HasBaseTime.Time := by rfl
+lemma ISO_current_to_has_current : ISO.current = HasBaseCurrent.Current := by rfl
+lemma ISO_temperature_to_has_temperature : ISO.temperature = HasBaseTemperature.Temperature := by rfl
+lemma ISO_amount_to_has_amount : ISO.amount = HasBaseAmount.Amount := by rfl
+lemma ISO_luminosity_to_has_luminosity : ISO.luminosity = HasBaseLuminosity.Luminosity := by rfl
+lemma ISO_mass_to_has_mass : ISO.mass = HasBaseMass.Mass := by rfl
 
 protected def ISO.repr : ISO → String
   | ISO.time => "time"
