@@ -66,6 +66,9 @@ def dimension (B : Type u) (E : Type v) [CommRing E] := B → E
 class DimEq {B E} [CommRing E] (dim1 : dimension B E) (dim2 : semiOutParam (dimension B E)) where
 (Eq : dim1 = dim2)
 
+--lemma dimension.dimEq {B E} [CommRing E] (dim1 dim2: dimension B E) [inst1 : DimEq dim1 dim2] : dim1 = dim2 := by
+  --exact inst1.Eq
+
 instance {B E1 E2} [CommRing E1] [CommRing E2] [Coe E1 E2] : Coe (dimension B E1) (dimension B E2) where
 coe :=  fun f => fun x => (f x : E2)
 
@@ -82,7 +85,7 @@ noncomputable instance (B : Type u) (E : Type v) [CommRing E] (a b : dimension B
 -- Here we define the algebraic operators (+,-,*,/,^,<) and how they can act on dimensions.
 
 -- Addition and subtraction only work if both dimensions are the same and returns the same dimension
-variable {B : Type u} {E : Type v} [CommRing E]
+variable {B : Type u} {E : Type v} [CommRing E] (a : dimension B E)
 
 protected noncomputable def add : dimension B E → dimension B E → dimension B E :=
 Classical.epsilon $ fun f => ∀ a b, a = b → f a b = a
@@ -100,6 +103,10 @@ protected def div  : dimension B E → dimension B E → dimension B E
 protected def pow {E} [CommRing E]: dimension B E → E → dimension B E
 | a, n => fun i => n * (a i)
 
+
+protected def npow {E} [CommRing E]: dimension B E → ℕ → dimension B E
+| a, n => fun i => n * (a i)
+
 -- Inequality operators only work if the dimensions are the same.
 protected def le  : dimension B E → dimension B E → Prop
 | a, b => ite (a = b) true false
@@ -113,6 +120,7 @@ instance  : Mul (dimension B E) := ⟨dimension.mul⟩
 instance  : Div (dimension B E) := ⟨dimension.div⟩
 instance  {E} [CommRing E] : HPow (dimension B E) E (dimension B E) := ⟨dimension.pow⟩
 instance : Pow (dimension B E) E := ⟨dimension.pow⟩
+instance : Pow (dimension B E) ℕ := ⟨dimension.npow⟩
 instance  : Inv (dimension B E) := ⟨fun d => d^(-1:E)⟩
 instance  : LT (dimension B E) := ⟨dimension.lt⟩
 instance  : LE (dimension B E) := ⟨dimension.le⟩
@@ -122,8 +130,8 @@ instance {E1 E2} [CommRing E1] [CommRing E2] [Coe E1 E2]: HPow (dimension B E1) 
   | a, n => dimension.pow (a : (dimension B E2)) n
 
 -- Here we define how derivatives and integrals act on dimensions.
-protected def derivative  (b : dimension B E): dimension B E → dimension B E := fun a => a / b
-protected def integral  (b : dimension B E): dimension B E → dimension B E := fun a => a * b
+protected def derivative (f : dimension B E → dimension B E) (b : dimension B E) : dimension B E := (f b)/b
+protected def integral (f : dimension B E → dimension B E) (b : dimension B E) : dimension B E := (f b)*b
 
 -- Here we define relative operators (exp, sin, log, etc.)
 protected noncomputable def relativeOperator  : dimension B E → dimension B E :=
@@ -167,6 +175,7 @@ Classical.epsilon $ fun Operator => ∀ dim , dim = 1 → Operator dim = 1
 @[simp] lemma div_def'  (a b : dimension B E) : a / b = fun i => a i - b i := by rfl
 @[simp] lemma pow_def  (a : dimension B E) (b : E) : a.pow b = a^b := by rfl
 @[simp] lemma pow_def'   (a : dimension B E) (b : E) : a ^ b = fun i => b * (a i):= by rfl
+@[simp] lemma npow_def   (a : dimension B E) (b : ℕ) : a ^ b = fun i => b * (a i):= by rfl
 @[simp] lemma inv_def  (a : dimension B E) : a⁻¹ = a^(-1:E):= by rfl
 @[simp] lemma le_def  (a b : dimension B E) : a.le b ↔ a ≤ b := by rfl
 @[simp] lemma le_def'  (a : dimension B E) : a ≤ a := by
@@ -178,10 +187,8 @@ Classical.epsilon $ fun Operator => ∀ dim , dim = 1 → Operator dim = 1
   simp only [dimension.lt, reduceIte]
 
 
-@[simp]
 lemma one_eq_dimensionless  : 1 = dimensionless B E := by rfl
 
-@[simp]
 lemma dimensionless_def'  : dimensionless B E = Function.const B 0 := rfl
 
 protected theorem mul_comm  (a b : dimension B E) : a * b = b * a := by
@@ -211,7 +218,7 @@ protected theorem div_eq_mul_inv  (a b : dimension B E) : a / b = a * b⁻¹ := 
   rw [sub_eq_add_neg]
 
 protected theorem mul_left_inv  (a : dimension B E) : a⁻¹ * a = 1 := by
-  simp
+  simp [one_eq_dimensionless,dimensionless_def']
   funext
   simp
 
@@ -219,7 +226,7 @@ protected theorem mul_right_inv  (a : dimension B E) : a * a⁻¹ = 1 := by
   rw [dimension.mul_comm, dimension.mul_left_inv]
 
 protected theorem pow_zero  (a : dimension B E) : a ^ (0:E) = 1 := by
-  simp
+  simp [one_eq_dimensionless,dimensionless_def']
   funext
   simp
 
@@ -227,6 +234,8 @@ protected theorem pow_succ  (a : dimension B E) (n : E) : a ^ (n + 1) = a * a^n 
   simp
   funext x
   rw [add_mul,add_comm, one_mul]
+
+
 
 instance  : CommGroup (dimension B E) where
   mul := dimension.mul
@@ -241,13 +250,11 @@ instance  : CommGroup (dimension B E) where
   mul_comm := dimension.mul_comm
   div_eq_mul_inv a := dimension.div_eq_mul_inv a
   inv_mul_cancel a := dimension.mul_left_inv a
-  npow_zero := by intro x; funext x; simp
+  npow_zero := by intro x; funext x; simp [one_eq_dimensionless,dimensionless_def']
   npow_succ n a := by simp; funext x; rw [add_one_mul]
   zpow_neg' _ _ := by simp; rename_i x1 x2; funext x3; rw [← neg_add,neg_mul,add_comm]
   zpow_succ' _ _ := by simp; rename_i x1 x2; funext; rw [add_one_mul]
-  zpow_zero' := by intro x; funext x; simp
-
-
+  zpow_zero' := by intro x; funext x; simp [one_eq_dimensionless,dimensionless_def']
 
 
 
@@ -259,7 +266,7 @@ instance  : CommGroup (dimension B E) where
 -/
 
 --Converts a list (tuple) of dimensions (the variables) into a matrix of exponent values
-def dimensional_matrix {n : ℕ}  [Fintype B] (d : Fin n → dimension B E)
+def dimensional_matrix {n : ℕ} [Fintype B] (d : Fin n → dimension B E)
   (perm : Fin (Fintype.card B) → B) : Matrix (Fin (Fintype.card B)) (Fin n) E :=
     Matrix.of.toFun (fun (a : Fin (Fintype.card B)) (i : Fin n) => d i (perm a))
 

@@ -40,6 +40,7 @@ LEAN_EXPORT lean_object* l_dimension_pow___at_dimension_instHPowOfCoe___spec__1_
 LEAN_EXPORT lean_object* l_LinearEquiv_toEquiv___at_dimension_dimensionless__numbers__matrix___spec__10___rarg___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_pow___rarg(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_LinearMap_inverse___at_dimension_dimensionless__numbers__matrix___spec__9___rarg___boxed(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_dimension_instPowNat(lean_object*, lean_object*);
 lean_object* l_Pi_instZero___elambda__1___rarg(lean_object*, lean_object*);
 lean_object* l_Semiring_toNonAssocSemiring___rarg(lean_object*);
 LEAN_EXPORT lean_object* l_dimension_pow(lean_object*, lean_object*);
@@ -70,6 +71,7 @@ LEAN_EXPORT lean_object* l_dimension_derivative___rarg(lean_object*, lean_object
 LEAN_EXPORT lean_object* l_LinearMap_inverse___at_dimension_dimensionless__numbers__matrix___spec__9(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_dimensional__matrix___rarg(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_dimensionless__numbers__matrix___rarg(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_dimension_npow___rarg(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_LinearMap_ker___at_dimension_dimensionless__numbers__matrix___spec__12(lean_object*, lean_object*);
 lean_object* l_SubNegZeroMonoid_toNegZeroClass___rarg(lean_object*);
 LEAN_EXPORT lean_object* l_dimension_instCommGroup___rarg___lambda__1(lean_object*, lean_object*, lean_object*, lean_object*);
@@ -107,6 +109,7 @@ LEAN_EXPORT lean_object* l_RingHom_id___at_dimension_dimensionless__numbers__mat
 LEAN_EXPORT lean_object* l_dimension_instHPowOfCoe___rarg___lambda__1(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_Pi_single___at_dimension_dimensionless__numbers__matrix___spec__6(lean_object*);
 LEAN_EXPORT lean_object* l_LinearMap_inverse___at_dimension_dimensionless__numbers__matrix___spec__9___rarg(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_dimension_instPowNat___rarg(lean_object*);
 LEAN_EXPORT lean_object* l_LinearEquiv_toAddEquiv___at_dimension_dimensionless__numbers__matrix___spec__11___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_LinearMap_toMatrix_x27___at_dimension_dimensionless__numbers__matrix___spec__4___rarg___lambda__2___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l___private_DimensionalAnalysis_Basic_0__dimension_mul_match__1_splitter___rarg(lean_object*, lean_object*, lean_object*);
@@ -131,6 +134,7 @@ LEAN_EXPORT lean_object* l_dimension_instCommGroup___rarg___lambda__2(lean_objec
 LEAN_EXPORT lean_object* l_Pi_single___at_dimension_dimensionless__numbers__matrix___spec__6___rarg___lambda__1(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_instCoeDimension___rarg(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_dimension_instCommGroup(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_dimension_npow(lean_object*, lean_object*);
 lean_object* l_Ring_toAddCommGroup___rarg(lean_object*);
 LEAN_EXPORT lean_object* l_instCoeDimension___rarg(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
 _start:
@@ -280,6 +284,37 @@ x_3 = lean_alloc_closure((void*)(l_dimension_pow___rarg), 4, 0);
 return x_3;
 }
 }
+LEAN_EXPORT lean_object* l_dimension_npow___rarg(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
+_start:
+{
+lean_object* x_5; lean_object* x_6; lean_object* x_7; lean_object* x_8; lean_object* x_9; lean_object* x_10; lean_object* x_11; lean_object* x_12; lean_object* x_13; 
+lean_inc(x_1);
+x_5 = l_CommRing_toNonUnitalCommRing___rarg(x_1);
+x_6 = l_NonUnitalNonAssocCommRing_toNonUnitalNonAssocCommSemiring___rarg(x_5);
+x_7 = lean_ctor_get(x_6, 1);
+lean_inc(x_7);
+lean_dec(x_6);
+x_8 = l_Ring_toAddGroupWithOne___rarg(x_1);
+x_9 = lean_ctor_get(x_8, 1);
+lean_inc(x_9);
+lean_dec(x_8);
+x_10 = lean_ctor_get(x_9, 0);
+lean_inc(x_10);
+lean_dec(x_9);
+x_11 = lean_apply_1(x_10, x_3);
+x_12 = lean_apply_1(x_2, x_4);
+x_13 = lean_apply_2(x_7, x_11, x_12);
+return x_13;
+}
+}
+LEAN_EXPORT lean_object* l_dimension_npow(lean_object* x_1, lean_object* x_2) {
+_start:
+{
+lean_object* x_3; 
+x_3 = lean_alloc_closure((void*)(l_dimension_npow___rarg), 4, 0);
+return x_3;
+}
+}
 LEAN_EXPORT lean_object* l_dimension_instMul___rarg(lean_object* x_1) {
 _start:
 {
@@ -345,6 +380,23 @@ _start:
 {
 lean_object* x_3; 
 x_3 = lean_alloc_closure((void*)(l_dimension_instPow___rarg), 1, 0);
+return x_3;
+}
+}
+LEAN_EXPORT lean_object* l_dimension_instPowNat___rarg(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lean_alloc_closure((void*)(l_dimension_npow___rarg), 4, 1);
+lean_closure_set(x_2, 0, x_1);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* l_dimension_instPowNat(lean_object* x_1, lean_object* x_2) {
+_start:
+{
+lean_object* x_3; 
+x_3 = lean_alloc_closure((void*)(l_dimension_instPowNat___rarg), 1, 0);
 return x_3;
 }
 }
@@ -475,9 +527,11 @@ return x_5;
 LEAN_EXPORT lean_object* l_dimension_derivative___rarg(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
 _start:
 {
-lean_object* x_5; 
-x_5 = l_dimension_div___rarg(x_1, x_3, x_2, x_4);
-return x_5;
+lean_object* x_5; lean_object* x_6; 
+lean_inc(x_3);
+x_5 = lean_apply_1(x_2, x_3);
+x_6 = l_dimension_div___rarg(x_1, x_5, x_3, x_4);
+return x_6;
 }
 }
 LEAN_EXPORT lean_object* l_dimension_derivative(lean_object* x_1, lean_object* x_2) {
@@ -491,9 +545,11 @@ return x_3;
 LEAN_EXPORT lean_object* l_dimension_integral___rarg(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
 _start:
 {
-lean_object* x_5; 
-x_5 = l_dimension_mul___rarg(x_1, x_3, x_2, x_4);
-return x_5;
+lean_object* x_5; lean_object* x_6; 
+lean_inc(x_3);
+x_5 = lean_apply_1(x_2, x_3);
+x_6 = l_dimension_mul___rarg(x_1, x_5, x_3, x_4);
+return x_6;
 }
 }
 LEAN_EXPORT lean_object* l_dimension_integral(lean_object* x_1, lean_object* x_2) {
