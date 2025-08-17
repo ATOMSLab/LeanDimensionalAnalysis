@@ -18,7 +18,3 @@ root = "DimensionalAnalysis"
 [[lean_lib]]
 name = "PhysicalVariables"
 root = "PhysicalVariables"
-
-[[lean_lib]]
-name = "LeanLJ"
-root = "LeanLJ"
